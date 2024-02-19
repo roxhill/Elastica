@@ -186,7 +186,7 @@ class Param implements ArrayableInterface, \Countable
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->_params);
     }

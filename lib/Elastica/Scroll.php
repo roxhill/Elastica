@@ -60,6 +60,7 @@ class Scroll implements \Iterator
      *
      * @return ResultSet
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->_currentResultSet;
@@ -70,7 +71,7 @@ class Scroll implements \Iterator
      *
      * @link http://php.net/manual/en/iterator.next.php
      */
-    public function next()
+    public function next(): void
     {
         if ($this->currentPage < $this->totalPages) {
             $this->_saveOptions();
@@ -94,6 +95,7 @@ class Scroll implements \Iterator
      *
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->_nextScrollId;
@@ -106,7 +108,7 @@ class Scroll implements \Iterator
      *
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->_nextScrollId !== null;
     }
@@ -116,7 +118,7 @@ class Scroll implements \Iterator
      *
      * @link http://php.net/manual/en/iterator.rewind.php
      */
-    public function rewind()
+    public function rewind(): void
     {
         // reset state
         $this->_options = [null, null];
@@ -135,7 +137,7 @@ class Scroll implements \Iterator
     /**
      * Cleares the search context on ES and marks this Scroll instance as finished.
      */
-    public function clear()
+    public function clear(): void
     {
         if (null !== $this->_nextScrollId) {
             $this->_search->getClient()->request(
@@ -155,7 +157,7 @@ class Scroll implements \Iterator
      *
      * @param ResultSet $resultSet
      */
-    protected function _setScrollId(ResultSet $resultSet)
+    protected function _setScrollId(ResultSet $resultSet): void
     {
         $this->_currentResultSet = $resultSet;
         ++$this->currentPage;
@@ -166,7 +168,7 @@ class Scroll implements \Iterator
     /**
      * Save all search options manipulated by Scroll.
      */
-    protected function _saveOptions()
+    protected function _saveOptions(): void
     {
         if ($this->_search->hasOption(Search::OPTION_SCROLL)) {
             $this->_options[0] = $this->_search->getOption(Search::OPTION_SCROLL);
@@ -180,7 +182,7 @@ class Scroll implements \Iterator
     /**
      * Revert search options to previously saved state.
      */
-    protected function _revertOptions()
+    protected function _revertOptions(): void
     {
         $this->_search->setOption(Search::OPTION_SCROLL, $this->_options[0]);
         $this->_search->setOption(Search::OPTION_SCROLL_ID, $this->_options[1]);
